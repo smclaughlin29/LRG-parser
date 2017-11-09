@@ -1,8 +1,9 @@
 from xml.etree import ElementTree as ET
 
 
+
 def choose_file(name: str) -> str:
-    """Takes in LRG or gene name and returns LRG file name 
+    """Takes in LRG or gene name and returns LRG file name
 
     """
     assert type(name) == str
@@ -10,6 +11,7 @@ def choose_file(name: str) -> str:
     if name.startswith('LRG_'):
         filename = f"lrg_data/{name}.xml"
     else:
+        return None
         # try to lookup
 
     return filename
@@ -24,8 +26,12 @@ def mapping_diff(filename):
 
     root = tree.getroot()
 
-    mapping_list = (root.find("updatable_annotation/annotation_set[@type='lrg']")
-                        .findall("mapping"))
+    try:
+        mapping_list = (root.find("updatable_annotation/annotation_set[@type='lrg']")
+                            .findall("mapping"))
+    except AttributeError:
+        raise AttributeError("No LRG annotation found, corrupted LRG file?\n"
+                              f"Please check {filename}")
 
     builds = {}
 
@@ -35,6 +41,3 @@ def mapping_diff(filename):
     assert builds, "No mapping co-ordinates found"
 
     return builds
-
-
-

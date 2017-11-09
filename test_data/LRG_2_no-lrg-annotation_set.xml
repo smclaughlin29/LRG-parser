@@ -356,25 +356,6 @@
       </source>
       <modification_date>2017-11-07</modification_date>
     </annotation_set>
-    <annotation_set type="lrg">
-      <source>
-        <name>LRG</name>
-        <url>http://www.lrg-sequence.org/</url>
-        <contact>
-          <name>Locus Reference Genomic</name>
-          <url>http://www.lrg-sequence.org/contact</url>
-          <email>feedback@lrg-sequence.org</email>
-        </contact>
-      </source>
-      <modification_date>2017-11-07</modification_date>
-      <mapping coord_system="GRCh37.p13" other_name="7" other_id="NC_000007.13" other_id_syn="CM000669.1" other_start="94018873" other_end="94062544" type="other_assembly">
-        <mapping_span lrg_start="1" lrg_end="43672" other_start="94018873" other_end="94062544" strand="1" />
-      </mapping>
-      <mapping coord_system="GRCh38.p7" other_name="7" other_id="NC_000007.14" other_id_syn="CM000669.2" other_start="94389561" other_end="94433232" type="main_assembly">
-        <mapping_span lrg_start="1" lrg_end="43672" other_start="94389561" other_end="94433232" strand="1" />
-      </mapping>
-      <lrg_locus source="HGNC">COL1A2</lrg_locus>
-    </annotation_set>
     <annotation_set type="ncbi">
       <source>
         <name>NCBI RefSeqGene</name>
