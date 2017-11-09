@@ -19,7 +19,7 @@ Parser for LRGs
 
 - Download LRG data
 
-      wget ftp://ftp.ebi.ac.uk/pub/databases/lrgex/LRG_*.xml lrg_data
+      wget ftp://ftp.ebi.ac.uk/pub/databases/lrgex/LRG_*.xml -P lrg_data
 
 ## User Stories
 
