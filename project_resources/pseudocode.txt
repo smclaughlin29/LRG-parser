@@ -1,0 +1,27 @@
+script option --get-data download lrgs
+
+function(dict with gene:lrg)
+    test every gene only 1 lrg
+
+
+function(what file to read)
+    test file exists
+    test gene exists in gene:lrg dict
+    make everything upper  
+    
+function(get genome info in dict)
+    get mapping info
+    get mismatch info between 37 and 38
+print(dict)
+
+function(get summary info in dict)
+    number of transcripts and exons
+    findall on transcript
+    get transcript start and end
+    for each of those count the number of exons
+    get number of elements and count length
+print(dict)
+
+function(find differences)
+print(differences)
+
