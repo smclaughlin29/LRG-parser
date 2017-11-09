@@ -1,6 +1,6 @@
 import pytest
 
-from lrg_diff import choose_file, mapping_diff, index_lrgs
+from .lrg_diff import choose_file, mapping_diff, index_lrgs
 
 
 class TestChooseFile:
