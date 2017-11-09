@@ -26,7 +26,7 @@ class TestMappingDiff:
         assert builds
         assert builds['GRCh37.p13']['other_start'] == "48259457"
         assert builds['GRCh38.p7']['other_end'] == "50206639"
-        assert builds['GRCh37.p13']['diff']['type'] == 'mismatch'
+        assert builds['GRCh37.p13']['diff']
 
     def test_lrg_214(self):
         builds = mapping_diff('test_data/LRG_214.xml')
