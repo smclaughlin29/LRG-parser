@@ -2,14 +2,6 @@ from argparse import ArgumentParser
 from xml.etree import ElementTree as ET
 from glob import glob
 
-parser = ArgumentParser(description='Show transcript information and build differences for given LRG')
-
-group = parser.add_mutually_exclusive_group()
-parser.add_argument('input', help='LRG or HGNC name (e.g. LRG_214 or NF1)')
-group.add_argument('-m', '--mapping-only', help='Print LRG mapping info only', action='store_true')
-group.add_argument('-d', '--diffs-only', help='Print differences between GRCh37 and GRCh38 only', action='store_true')
-args = parser.parse_args()
-
 
 def index_lrgs(directory="lrg_data/") -> dict:
     """Parse all files in directory and return dict of gene names to LRGs"""
@@ -88,3 +80,16 @@ def mapping_diff(filename: str) -> dict:
     assert builds, "No mapping co-ordinates found"
 
     return builds
+
+if __name__ == '__main__':
+    parser = ArgumentParser(
+        description='Show transcript information and build differences for given LRG')
+
+    group = parser.add_mutually_exclusive_group()
+    parser.add_argument('input', help='LRG or HGNC name (e.g. LRG_214 or NF1)')
+    group.add_argument('-m', '--mapping-only',
+                       help='Print LRG mapping info only', action='store_true')
+    group.add_argument('-d', '--diffs-only',
+                       help='Print differences between GRCh37 and GRCh38 only',
+                       action='store_true')
+    args = parser.parse_args()
