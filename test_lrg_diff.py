@@ -26,12 +26,13 @@ class TestMappingDiff:
         assert builds
         assert builds['GRCh37.p13']['other_start'] == "48259457"
         assert builds['GRCh38.p7']['other_end'] == "50206639"
+        assert builds['GRCh37.p13']['diff']['type'] == 'mismatch'
 
     def test_lrg_214(self):
         builds = mapping_diff('test_data/LRG_214.xml')
         assert builds
-        assert builds['GRCh37.p13']['other_name'] == "17"
-        assert builds['GRCh37.p13']['other_name'] == builds['GRCh38.p7']['other_name']
+        assert builds['GRCh37.p13']['lrg_end'] == "289701"
+        assert builds['GRCh37.p13']['lrg_end'] == builds['GRCh38.p7']['lrg_end']
 
     def test_no_lrg_anno(self):
         with pytest.raises(AttributeError):

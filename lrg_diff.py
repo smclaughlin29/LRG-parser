@@ -36,7 +36,11 @@ def choose_file(name: str) -> str:
 
 
 def mapping_diff(filename: str) -> dict:
-    """Parses XML and returns dict of genome build mappings"""
+    """Parses XML and returns dict of genome build mappings and differences
+
+    
+
+    """
     try:
         tree = ET.parse(filename)
     except IOError:
@@ -54,7 +58,19 @@ def mapping_diff(filename: str) -> dict:
     builds = {}
 
     for item in mapping_list:
-        builds[item.attrib['coord_system']] = item.attrib
+        build_dict = item.find("mapping_span").attrib
+        if item.findall("mapping_span/diff"):
+            for difference in item.findall("mapping_span/diff"):
+                # if there is a base mismatch
+                if 'diff' not in build_dict.keys():
+                    # no diff make dictionary with current difference in
+                    build_dict['diff'] = [difference.attrib]
+                else:
+                    # otherwise append to list of differences
+                    build_dict['diff'].append(difference.attrib)
+        # save build differences to builds dict using build as key
+        builds[item.attrib['coord_system']] = build_dict
+
 
     assert builds, "No mapping co-ordinates found"
 
