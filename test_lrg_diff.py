@@ -1,15 +1,14 @@
 import pytest
 
-from lrg_diff import choose_file, mapping_diff
+from lrg_diff import choose_file, mapping_diff, index_lrgs
 
 
 class TestChooseFile:
     def test_uppercase_file(self):
         assert choose_file('lrg_12') == 'lrg_data/LRG_12.xml'
 
-    @pytest.mark.xfail
     def test_no_gene(self):
-        with pytest.raises(Exception):
+        with pytest.raises(KeyError):
             choose_file('honestly_not_a_gene')
 
     def test_number_input(self):
@@ -36,4 +35,12 @@ class TestMappingDiff:
 
     def test_no_lrg_anno(self):
         with pytest.raises(AttributeError):
-            builds = mapping_diff('test_data/LRG_2_no-lrg-annotation_set.xml')
+            builds = mapping_diff('test_data/no-lrg-annotation_set_LRG_2.xml')
+
+
+class TestIndexLRGs:
+    def test_HGNC(self):
+        gene_names = index_lrgs('test_data/')
+        assert gene_names
+        assert gene_names['COL1A1'] == 'LRG_1'
+        assert gene_names['NF1'] == 'LRG_214'

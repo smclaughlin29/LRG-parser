@@ -1,6 +1,18 @@
 from xml.etree import ElementTree as ET
+from glob import glob
 
 
+def index_lrgs(directory="lrg_data/") -> dict:
+    """Parse all files in directory and return dict of gene names to LRGs"""
+    files = glob(f"{directory}LRG*.xml")
+    gene_names = {}
+    for file in files:
+        tree = ET.parse(file)
+        root = tree.getroot()
+        locus = root.find("updatable_annotation/annotation_set[@type='lrg']/lrg_locus")
+        gene_names[locus.text] = (file.replace(".xml", '')
+                                      .replace(directory, ''))
+    return gene_names
 
 def choose_file(name: str) -> str:
     """Takes in LRG or gene name and returns LRG file name
@@ -9,11 +21,17 @@ def choose_file(name: str) -> str:
     assert type(name) == str
     name = name.upper()
     if name.startswith('LRG_'):
-        filename = f"lrg_data/{name}.xml"
+        lrg = name
     else:
-        return None
-        # try to lookup
+        # create dictionary of gene names to LRGs
+        gene_names = index_lrgs()
+        try:
+            # try lookup of gene name
+            lrg = gene_names[name]
+        except KeyError:
+            raise KeyError(f"No LRG found for gene {name}")
 
+    filename = f"lrg_data/{lrg}.xml"
     return filename
 
 
