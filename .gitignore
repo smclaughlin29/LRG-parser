@@ -1,3 +1,4 @@
 .*
 !.gitkeep
 *LRG_*.xml
+!test_data/*
