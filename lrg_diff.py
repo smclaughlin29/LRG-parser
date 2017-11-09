@@ -38,7 +38,7 @@ def choose_file(name: str) -> str:
 def mapping_diff(filename: str) -> dict:
     """Parses XML and returns dict of genome build mappings and differences
 
-    
+
 
     """
     try:
@@ -59,9 +59,13 @@ def mapping_diff(filename: str) -> dict:
 
     for item in mapping_list:
         build_dict = item.find("mapping_span").attrib
+        assert build_dict['lrg_start'] < build_dict['lrg_end'], (
+                f"LRG start smaller than LRG end for {filename}")
+        assert build_dict['other_start'] < build_dict['other_end'], (
+                f"g. start smaller than g. end for {filename}")
         if item.findall("mapping_span/diff"):
+            # if there is a base mismatch, add all of them to the dictionary
             for difference in item.findall("mapping_span/diff"):
-                # if there is a base mismatch
                 if 'diff' not in build_dict.keys():
                     # no diff make dictionary with current difference in
                     build_dict['diff'] = [difference.attrib]
