@@ -35,8 +35,8 @@ def choose_file(name: str) -> str:
     return filename
 
 
-def mapping_diff(filename):
-
+def mapping_diff(filename: str) -> dict:
+    """Parses XML and returns dict of genome build mappings"""
     try:
         tree = ET.parse(filename)
     except IOError:
