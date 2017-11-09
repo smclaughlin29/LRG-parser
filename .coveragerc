@@ -1,0 +1,5 @@
+[report]
+include = lrg_diff.py
+
+[html]
+directory = coverage_html
