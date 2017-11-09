@@ -1,6 +1,23 @@
 # LRG-parser
 Parser for LRGs 
 
+## Setup
+
+- Clone repository 
+
+      git clone https://github.com/stefpiatek/LRG-parser.git
+
+- With python 3 in a unix environment, set up virtual environment (`pip install virtualenv`
+ if not already installed)
+    
+      cd LRG-parser
+      virtualenv .venv
+      source .venv/bin/activate 
+- Install requirements
+
+      pip install -r pip_requirements.txt
+
+
 ## User Stories
 
 - Command line input (input from LRG number or gene symbol)
