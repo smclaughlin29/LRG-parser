@@ -28,3 +28,7 @@ Parser for LRGs
 - User input error checking
 - Print LRG summary (gene name, LRG number, transcripts, number of exons etc)
 - Print genomic coordinate and sequence differences between GRCh37 and GRCh38
+
+## Example Output
+
+Add example output
