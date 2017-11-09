@@ -17,6 +17,9 @@ Parser for LRGs
 
       pip install -r pip_requirements.txt
 
+- Download LRG data
+
+      wget ftp://ftp.ebi.ac.uk/pub/databases/lrgex/LRG_*.xml lrg_data
 
 ## User Stories
 
