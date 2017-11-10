@@ -104,7 +104,7 @@ def mapping_diff(filename: str) -> dict:
                             .findall("mapping"))
     except AttributeError:
         raise AttributeError("No LRG annotation found, corrupted LRG file?\n"
-                              f"Please check {filename}")
+                             f"Please check {filename}")
 
     builds = {}
     for item in mapping_list:
@@ -161,9 +161,11 @@ def return_mappings(builds: dict) -> str:
             try:
                 output_list.append(f"\t- {key}: {builds[GRC][key]}")
             except KeyError:
-                raise KeyError("LRG file corrupted or builds have been updated")
+                raise KeyError("LRG file corrupted or "
+                               "builds have been updated")
 
     return output_list
+
 
 def return_differences(builds: dict) -> str:
     """Return mapping and sequence differences,
@@ -225,7 +227,7 @@ if __name__ == '__main__':
     group.add_argument('-m', '--mapping',
                        help='Print LRG mapping info only', action='store_true')
     parser.add_argument('-d', '--diff',
-                       help='Print LRG differences', action='store_true')
+                        help='Print LRG differences', action='store_true')
     args = parser.parse_args()
 
     # run functions
