@@ -5,3 +5,5 @@
 !test_data/*
 coverage_html/*
 !coverage_html/index.html
+*__pycache__*
+*.pyc

@@ -21,6 +21,12 @@ Parser for LRGs
 
       wget ftp://ftp.ebi.ac.uk/pub/databases/lrgex/LRG_*.xml -P lrg_data
 
+## Testing
+
+- Run pytest unit test suite
+
+      python -m pytest
+
 ## User Stories
 
 - Command line input (input from LRG number or gene symbol)
