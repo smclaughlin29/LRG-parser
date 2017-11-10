@@ -28,6 +28,7 @@ def index_lrgs(directory="lrg_data/") -> dict:
                                       .replace(directory, ''))
     return gene_names
 
+
 def choose_file(name: str) -> str:
     """Takes in LRG or gene name and returns LRG file name
 
@@ -52,7 +53,7 @@ def choose_file(name: str) -> str:
 
     """
     assert type(name) == str
-    name = name.upper()
+    name = name.replace(".xml", "").upper()
     if name.startswith('LRG_'):
         lrg = name
     else:
@@ -158,7 +159,7 @@ def return_differences(builds: dict) -> str:
         output_list.append(f"\n{GRC} details:")
         for key in mapping_keys:
             try:
-                output_list.append(f"{key}: {builds[GRC][key]}")
+                output_list.append(f"\t- {key}: {builds[GRC][key]}")
             except KeyError:
                 raise KeyError("LRG file corrupted or builds have been updated")
     # write out differences between keys
@@ -187,12 +188,18 @@ if __name__ == '__main__':
         description='Show transcript information and '
                     'build differences for given LRG')
 
-    group = parser.add_mutually_exclusive_group()
     parser.add_argument('input', help='LRG or HGNC name (e.g. LRG_214 or NF1)')
-    group.add_argument('-m', '--mapping-only',
+    parser.add_argument('-t', '--transcripts',
                        help='Print LRG mapping info only', action='store_true')
-    group.add_argument('-d', '--diffs-only',
-                       help='Print differences between GRCh37 and GRCh38 only',
-                       action='store_true')
     args = parser.parse_args()
-    
+
+    # run functions
+    filename = choose_file(args.input)
+    builds = mapping_diff(filename)
+    mapping_output = return_differences(builds)
+    if args.transcripts:
+        # print transcripts and exons
+        pass
+
+    for line in mapping_output:
+        print(line)
