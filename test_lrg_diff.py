@@ -1,6 +1,7 @@
 import pytest
 
-from lrg_diff import choose_file, mapping_diff, index_lrgs, return_differences
+from lrg_diff import (choose_file, mapping_diff, index_lrgs, return_mappings,
+                      return_differences)
 
 
 class TestChooseFile:
@@ -38,6 +39,11 @@ class TestMappingDiff:
         with pytest.raises(AttributeError):
             builds = mapping_diff('test_data/no-lrg-annotation_set_LRG_2.xml')
 
+    def test_multiple_diff(self):
+        builds = mapping_diff('test_data/LRG_992.xml')
+        assert len(builds['GRCh37.p13']['diff']) == 6
+
+
 
 class TestIndexLRGs:
     def test_HGNC(self):
@@ -46,6 +52,38 @@ class TestIndexLRGs:
         assert gene_names['COL1A1'] == 'LRG_1'
         assert gene_names['NF1'] == 'LRG_214'
 
+
+class TestReturnMappings:
+    def setup(self):
+        self.builds = {'GRCh37.p13': {'lrg_start': '1', 'lrg_end': '5000',
+                                      'other_start': '50000',
+                                      'other_end': '60000',
+                                      'diff': [{'type': 'mismatch',
+                                                'other_start': '55000',
+                                                'other_end': '55000',
+                                                'lrg_sequence': 'G',
+                                                'other_sequence': 'A'}]
+                                      },
+                       'GRCh38.p7': {'lrg_start': '1', 'lrg_end': '5000',
+                                     'other_start': '60000',
+                                     'other_end': '70000'
+                                     }
+                       }
+
+    def test_summary(self):
+        builds = dict(self.builds)
+        output = return_mappings(builds)
+        assert any(["lrg_start: 1" in line
+                    for line in output])
+        assert any(["lrg_end: 5000" in line
+                    for line in output])
+
+
+    def test_invalid_build(self):
+        builds = dict(self.builds)
+        builds.pop('GRCh37.p13')
+        with pytest.raises(KeyError):
+            return_mappings(builds)
 
 class TestReturnDifferences:
     def setup(self):
