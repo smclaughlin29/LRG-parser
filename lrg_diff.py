@@ -186,18 +186,21 @@ def return_differences(builds: dict) -> str:
 
 if __name__ == '__main__':
     parser = ArgumentParser(
-        description='Show transcript information and '
+        description='Show transcript information, mapping information and '
                     'build differences for given LRG')
 
     group = parser.add_mutually_exclusive_group()
-    parser.add_argument('input', help='LRG or HGNC name (e.g. LRG_214 or NF1)')
+    parser.add_argument('input', help='LRG or HGNC gene name '
+                                      '(e.g. LRG_214, NF1, lrg_1...)')
     group.add_argument('-t', '--transcripts',
                        help='Print transcript information only',
                        action='store_true')
     group.add_argument('-m', '--mapping',
-                       help='Print LRG mapping info only', action='store_true')
+                       help='Print LRG mapping information only',
+                       action='store_true')
     parser.add_argument('-d', '--diff',
-                        help='Print LRG differences', action='store_true')
+                        help='Print LRG differences only',
+                        action='store_true')
     args = parser.parse_args()
 
     # run functions
