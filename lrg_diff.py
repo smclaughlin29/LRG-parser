@@ -129,8 +129,8 @@ def mapping_diff(filename: str) -> dict:
     return builds
 
 
-def return_differences(builds: dict) -> str:
-    """Return mapping and sequence differences,
+def return_mappings(builds: dict) -> str:
+    """Return sequence differences,
     assumes builds are 'GRCh37.p13' and 'GRCh38.p7', update if this changes
 
     :param
@@ -162,6 +162,34 @@ def return_differences(builds: dict) -> str:
                 output_list.append(f"\t- {key}: {builds[GRC][key]}")
             except KeyError:
                 raise KeyError("LRG file corrupted or builds have been updated")
+
+    return output_list
+
+def return_differences(builds: dict) -> str:
+    """Return mapping and sequence differences,
+    assumes builds are 'GRCh37.p13' and 'GRCh38.p7', update if this changes
+
+    :param
+        builds -- dict:
+
+    :example
+        return_differences({'GRCh37.p13': {'lrg_start': '1', 'lrg_end': '5000',
+                                           'other_start': '50000',
+                                           'other_end': '60000',
+                                           'diff': [{'type': 'mismatch',
+                                                     'other_start': '55000',
+                                                     'other_end': '55000',
+                                                     'lrg_sequence': 'G',
+                                                     'other_sequence': 'A'}]
+                                           }
+                            'GRCh38.p7': {'lrg_start': '1', 'lrg_end': '5000',
+                                           'other_start': '60000',
+                                           'other_end': '70000'
+                                          }
+                            })
+    """
+    output_list = []
+    mapping_keys = ['lrg_start', 'lrg_end', 'other_start', 'other_end']
     # write out differences between keys
     for key in mapping_keys:
         if builds['GRCh37.p13'][key] != builds['GRCh38.p7'][key]:
@@ -172,12 +200,13 @@ def return_differences(builds: dict) -> str:
     if 'diff' in builds['GRCh37.p13'].keys():
         for diff in builds['GRCh37.p13']['diff']:
             output_list.append("\nSequence differences found...")
-            output_list.append(f"Type: {diff['type']}")
+            output_list.append(f"\t- Type: {diff['type']}")
             output_list.append(
-                f"Start: {diff['other_start']}, End: {diff['other_start']}"
+                f"\t- Start: {diff['other_start']}, End: {diff['other_start']}"
             )
             output_list.append(
-                f"Old: {diff['other_sequence']}, New: {diff['lrg_sequence']}"
+                f"\t- Old: {diff['other_sequence']}, "
+                f"New: {diff['lrg_sequence']}"
             )
 
     return output_list
@@ -188,18 +217,37 @@ if __name__ == '__main__':
         description='Show transcript information and '
                     'build differences for given LRG')
 
+    group = parser.add_mutually_exclusive_group()
     parser.add_argument('input', help='LRG or HGNC name (e.g. LRG_214 or NF1)')
-    parser.add_argument('-t', '--transcripts',
+    group.add_argument('-t', '--transcripts',
+                       help='Print transcript information only',
+                       action='store_true')
+    group.add_argument('-m', '--mapping',
                        help='Print LRG mapping info only', action='store_true')
+    parser.add_argument('-d', '--diff',
+                       help='Print LRG differences', action='store_true')
     args = parser.parse_args()
 
     # run functions
     filename = choose_file(args.input)
     builds = mapping_diff(filename)
-    mapping_output = return_differences(builds)
+    mapping_output = return_mappings(builds)
+    diff_output = return_differences(builds)
+
+    if not any([args.transcripts, args.mapping, args.diff]):
+        print("Placeholder for transcript information\n")
+        for line in mapping_output:
+            print(line)
+        for line in diff_output:
+            print(line)
+
     if args.transcripts:
         # print transcripts and exons
-        pass
+        print("Placeholder for transcript information\n")
+    elif args.mapping:
+        for line in mapping_output:
+            print(line)
 
-    for line in mapping_output:
-        print(line)
+    if args.diff:
+        for line in diff_output:
+            print(line)
