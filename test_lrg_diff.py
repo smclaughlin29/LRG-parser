@@ -14,7 +14,7 @@ class TestChooseFile:
         assert choose_file('LRG_12.xml') == 'lrg_data/LRG_12.xml'
 
     def test_no_gene(self):
-        """if an gene name is given that doesn't exist, should raise KeyError"""
+        """if an gene name is given that doesn't exist, raise KeyError"""
         with pytest.raises(KeyError):
             choose_file('honestly_not_a_gene')
 
@@ -49,7 +49,9 @@ class TestMappingDiff:
         assert builds
         assert builds['GRCh37.p13']['lrg_end'] == "289701"
         # lrg_end of both builds should be the same
-        assert builds['GRCh37.p13']['lrg_end'] == builds['GRCh38.p7']['lrg_end']
+        GRC37 = builds['GRCh37.p13']['lrg_end']
+        GRC38 = builds['GRCh38.p7']['lrg_end']
+        assert GRC37 == GRC38
 
     def test_no_lrg_anno(self):
         """If no lrg anntation in LRG file, should raise AttributeError"""
@@ -60,11 +62,9 @@ class TestMappingDiff:
         """LRG with multiple sequence differences
 
          differences list should have more than one item
-
         """
         builds = mapping_diff('test_data/LRG_992.xml')
         assert len(builds['GRCh37.p13']['diff']) > 1
-
 
 
 class TestIndexLRGs:
@@ -113,6 +113,7 @@ class TestReturnMappings:
             with pytest.raises(KeyError):
                 return_mappings(builds)
 
+
 class TestReturnDifferences:
     def setup(self):
         """Setup function to allow for objects to be used across class"""
@@ -132,7 +133,8 @@ class TestReturnDifferences:
                        }
 
     def test_mapping_only(self):
-        """remove sequence differences, should only report mapping differences"""
+        """remove sequence differences,
+        should only report mapping differences"""
         builds = dict(self.builds)
         builds['GRCh37.p13'].pop('diff')
         output = return_differences(builds)
