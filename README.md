@@ -1,32 +1,48 @@
 # LRG-parser
-Parser for LRGs 
+LRG-xml parser project for Manchester University work. 
+
+Script runs at the command line with LRG number 
+or HGNC gene name. 
+
+By default should print transcript information, 
+mapping information and differences. Optional flags can be set to
+only get a subset of this information. 
+
+Outstanding items:
+
+- Transcript information parsing and printing still needs to be added
+
 
 ## Setup
 
 1. Clone repository 
 
-> git clone https://github.com/stefpiatek/LRG-parser.git
+   > git clone https://github.com/stefpiatek/LRG-parser.git
 
 2. With **Python 3** in a unix environment, set up virtual environment (`pip install virtualenv`
  if not already installed)
     
-> cd LRG-parser
-> virtualenv .venv
-> source .venv/bin/activate
+   > cd LRG-parser
+   >
+   > virtualenv .venv 
+   >
+   > source .venv/bin/activate
  
 3. Install requirements
 
-> pip install -r pip_requirements.txt
+   > pip install -r pip_requirements.txt
 
 4. Download LRG data
 
-> wget ftp://ftp.ebi.ac.uk/pub/databases/lrgex/LRG_*.xml -P lrg_data
+   > wget ftp://ftp.ebi.ac.uk/pub/databases/lrgex/LRG_*.xml -P lrg_data
 
 ## Testing
 
 Run pytest unit test suite (unit tests in `test_lrg_diff.py`)
 
-> python -m pytest
+   > python -m pytest
+
+Unit test coverage is at 74%, with all core functions covered. 
 
 ## Usage
 
@@ -39,7 +55,7 @@ For usage information use the `--help` flag:
     Show transcript information and build differences for given LRG
 
     positional arguments:
-      input              LRG or HGNC name (e.g. LRG_214 or NF1)
+      input              LRG or HGNC gene name (e.g. LRG_214 or NF1)
 
     optional arguments:
       -h, --help         show this help message and exit
@@ -80,7 +96,7 @@ For usage information use the `--help` flag:
 	    - Start: 48265495, End: 48265495
 	    - Old: A, New: G
 
-**Running script using HGNC name:**
+**Running script using HGNC gene name:**
 
 > python lrg_diff.py COL1A1
 
