@@ -32,9 +32,7 @@ Parser for LRGs
 
 For usage information use the `--help` flag:
 
-> python lrg_diff.py --help
-
-    $ python lrg_diff.py --help
+> $ python lrg_diff.py --help
 
     usage: lrg_diff.py [-h] [-t | -m] [-d] input
 
@@ -53,7 +51,7 @@ For usage information use the `--help` flag:
 
 **Running script using LRG name:**
 
-    $ python lrg_diff.py LRG_1
+> $ python lrg_diff.py LRG_1
 
     Placeholder for transcript information
 
@@ -84,7 +82,7 @@ For usage information use the `--help` flag:
 
 **Running script using HGNC name:**
 
-    $ python lrg_diff.py COL1A1
+> $ python lrg_diff.py COL1A1
 
     Placeholder for transcript information
 
@@ -116,7 +114,7 @@ For usage information use the `--help` flag:
 
 **Print LRG mapping info only:**
 
-    $ python lrg_diff.py -m LRG_1
+> $ python lrg_diff.py -m LRG_1
 
     GRCh37.p13 details:
 	    - lrg_start: 1
@@ -132,7 +130,7 @@ For usage information use the `--help` flag:
 
 **Print transcript information and LRG differences only:**
 
-    $ python lrg_diff.py -t -d LRG_1
+> $ python lrg_diff.py -t -d LRG_1
 
     Placeholder for transcript information
 
