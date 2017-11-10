@@ -136,21 +136,6 @@ def return_mappings(builds: dict) -> str:
     :param
         builds -- dict:
 
-    :example
-        return_differences({'GRCh37.p13': {'lrg_start': '1', 'lrg_end': '5000',
-                                           'other_start': '50000',
-                                           'other_end': '60000',
-                                           'diff': [{'type': 'mismatch',
-                                                     'other_start': '55000',
-                                                     'other_end': '55000',
-                                                     'lrg_sequence': 'G',
-                                                     'other_sequence': 'A'}]
-                                           }
-                            'GRCh38.p7': {'lrg_start': '1', 'lrg_end': '5000',
-                                           'other_start': '60000',
-                                           'other_end': '70000'
-                                          }
-                            })
     """
     output_list = []
     mapping_keys = ['lrg_start', 'lrg_end', 'other_start', 'other_end']
@@ -174,21 +159,6 @@ def return_differences(builds: dict) -> str:
     :param
         builds -- dict:
 
-    :example
-        return_differences({'GRCh37.p13': {'lrg_start': '1', 'lrg_end': '5000',
-                                           'other_start': '50000',
-                                           'other_end': '60000',
-                                           'diff': [{'type': 'mismatch',
-                                                     'other_start': '55000',
-                                                     'other_end': '55000',
-                                                     'lrg_sequence': 'G',
-                                                     'other_sequence': 'A'}]
-                                           }
-                            'GRCh38.p7': {'lrg_start': '1', 'lrg_end': '5000',
-                                           'other_start': '60000',
-                                           'other_end': '70000'
-                                          }
-                            })
     """
     output_list = []
     mapping_keys = ['lrg_start', 'lrg_end', 'other_start', 'other_end']
@@ -244,7 +214,6 @@ if __name__ == '__main__':
             print(line)
 
     if args.transcripts:
-        # print transcripts and exons
         print("Placeholder for transcript information\n")
     elif args.mapping:
         for line in mapping_output:
