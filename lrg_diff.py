@@ -71,7 +71,7 @@ def choose_file(name: str) -> str:
 def mapping_diff(filename: str) -> dict:
     """Parses XML and returns dict of genome build mappings and differences
 
-    builds dictionary currently should have keys ''GRCh37.p13' and 'GRCh38.p7'
+    builds dictionary currently should have keys 'GRCh37.p13' and 'GRCh38.p7'
     - each of these has mapping co-ordinates and list of sequence
       differences (these are themselves dictionaries)
 
@@ -127,6 +127,61 @@ def mapping_diff(filename: str) -> dict:
     assert builds, "No mapping co-ordinates found"
     return builds
 
+
+def return_differences(builds: dict) -> str:
+    """Return mapping and sequence differences,
+    assumes builds are 'GRCh37.p13' and 'GRCh38.p7', update if this changes
+
+    :param
+        builds -- dict:
+
+    :example
+        return_differences({'GRCh37.p13': {'lrg_start': '1', 'lrg_end': '5000',
+                                           'other_start': '50000',
+                                           'other_end': '60000',
+                                           'diff': [{'type': 'mismatch',
+                                                     'other_start': '55000',
+                                                     'other_end': '55000',
+                                                     'lrg_sequence': 'G',
+                                                     'other_sequence': 'A'}]
+                                           }
+                            'GRCh38.p7': {'lrg_start': '1', 'lrg_end': '5000',
+                                           'other_start': '60000',
+                                           'other_end': '70000'
+                                          }
+                            })
+    """
+    output_list = []
+    mapping_keys = ['lrg_start', 'lrg_end', 'other_start', 'other_end']
+    # summary of mappings
+    for GRC in ['GRCh37.p13', 'GRCh38.p7']:
+        output_list.append(f"\n{GRC} details:")
+        for key in mapping_keys:
+            try:
+                output_list.append(f"{key}: {builds[GRC][key]}")
+            except KeyError:
+                raise KeyError("LRG file corrupted or builds have been updated")
+    # write out differences between keys
+    for key in mapping_keys:
+        if builds['GRCh37.p13'][key] != builds['GRCh38.p7'][key]:
+            output_list.append(f"\nDifference at {key}:\n"
+                               f"\t- GRCh37: {builds['GRCh37.p13'][key]}\n"
+                               f"\t- GRCh38: {builds['GRCh38.p7'][key]}")
+    # Sequence differences
+    if 'diff' in builds['GRCh37.p13'].keys():
+        for diff in builds['GRCh37.p13']['diff']:
+            output_list.append("\nSequence differences found...")
+            output_list.append(f"Type: {diff['type']}")
+            output_list.append(
+                f"Start: {diff['other_start']}, End: {diff['other_start']}"
+            )
+            output_list.append(
+                f"Old: {diff['other_sequence']}, New: {diff['lrg_sequence']}"
+            )
+
+    return output_list
+
+
 if __name__ == '__main__':
     parser = ArgumentParser(
         description='Show transcript information and '
@@ -140,3 +195,4 @@ if __name__ == '__main__':
                        help='Print differences between GRCh37 and GRCh38 only',
                        action='store_true')
     args = parser.parse_args()
+    

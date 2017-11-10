@@ -1,6 +1,6 @@
 import pytest
 
-from lrg_diff import choose_file, mapping_diff, index_lrgs
+from lrg_diff import choose_file, mapping_diff, index_lrgs, return_differences
 
 
 class TestChooseFile:
@@ -45,3 +45,46 @@ class TestIndexLRGs:
         assert gene_names
         assert gene_names['COL1A1'] == 'LRG_1'
         assert gene_names['NF1'] == 'LRG_214'
+
+
+class TestReturnDifferences:
+    def setup(self):
+        self.builds = {'GRCh37.p13': {'lrg_start': '1', 'lrg_end': '5000',
+                                      'other_start': '50000',
+                                      'other_end': '60000',
+                                      'diff': [{'type': 'mismatch',
+                                                'other_start': '55000',
+                                                'other_end': '55000',
+                                                'lrg_sequence': 'G',
+                                                'other_sequence': 'A'}]
+                                      },
+                       'GRCh38.p7': {'lrg_start': '1', 'lrg_end': '5000',
+                                     'other_start': '60000',
+                                     'other_end': '70000'
+                                     }
+                       }
+
+    def test_mapping_only(self):
+        builds = dict(self.builds)
+        builds['GRCh37.p13'].pop('diff')
+        output = return_differences(builds)
+        assert not any(["sequence differences" in line
+                        for line in output])
+        assert any(["70000" in line
+                    for line in output])
+
+    def test_sequence_diff(self):
+        builds = dict(self.builds)
+        output = return_differences(builds)
+        assert any(["Sequence differences" in line
+                    for line in output])
+        assert any(["Difference at other_start" in line
+                    for line in output])
+        assert any(["70000" in line
+                    for line in output])
+
+    def test_invalid_build(self):
+        builds = dict(self.builds)
+        builds.pop('GRCh37.p13')
+        with pytest.raises(KeyError):
+            return_differences(builds)
