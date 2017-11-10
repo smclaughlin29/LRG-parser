@@ -4,19 +4,51 @@ from glob import glob
 
 
 def index_lrgs(directory="lrg_data/") -> dict:
-    """Parse all files in directory and return dict of gene names to LRGs"""
+    """Parse all files in directory and return dict of gene names to LRGs
+
+    :arg
+        directory -- str: default to lrg_data, but can be changed for testing
+
+    :return
+        gene_names -- dict: gene_name key to LRG value
+
+    :example
+        # Assuming directory with LRG_1 and LRG_214
+        output = index_lrgs()
+        output == {'COL1A1': 'LRG_1', 'NF1': 'LRG_214'}
+    """
     files = glob(f"{directory}LRG*.xml")
     gene_names = {}
     for file in files:
         tree = ET.parse(file)
         root = tree.getroot()
-        locus = root.find("updatable_annotation/annotation_set[@type='lrg']/lrg_locus")
+        locus = root.find("updatable_annotation"
+                          "/annotation_set[@type='lrg']/lrg_locus")
         gene_names[locus.text] = (file.replace(".xml", '')
                                       .replace(directory, ''))
     return gene_names
 
 def choose_file(name: str) -> str:
     """Takes in LRG or gene name and returns LRG file name
+
+    Takes input name and makes it uppercase. if name is in LRG format,
+    loads file otherwise runs index_lrgs and looks up name in
+    the lookup dictionary.
+
+    :arg
+        name -- str: LRG number, or gene_name
+
+    :return
+        filename -- str: relative path to filename for the LRG
+
+    :raise
+        AssertionError if name is not a string
+        KeyError if gene name does not exist in gene_name dict
+
+    :example
+        choose_file('lrg_1') == 'lrg_data/LRG_1.xml'
+        # assuming directory with LRG_214.xml (NF1)
+        choose_file('NF1') == 'lrg_data/LRG_214.xml'
 
     """
     assert type(name) == str
@@ -39,25 +71,41 @@ def choose_file(name: str) -> str:
 def mapping_diff(filename: str) -> dict:
     """Parses XML and returns dict of genome build mappings and differences
 
+    builds dictionary currently should have keys ''GRCh37.p13' and 'GRCh38.p7'
+    - each of these has mapping co-ordinates and list of sequence
+      differences (these are themselves dictionaries)
 
+    :arg
+        filename -- str: relative path to xml file to parse
 
+    :return
+        builds -- dict: dictionary of all lrg genome builds
+                  keys for lrg start and end, genome start and end
+                  if there are sequence differences:
+                    'diff' key contains list of dictionaries of differences
+
+    :raise
+        IOError if filename does not exist
+        AttributeError if no LRG annotation is found within LRG file
+        AssertionError if builds dictionary is not filled
     """
     try:
         tree = ET.parse(filename)
     except IOError:
-        raise IOError(f"{filename} does not exist. Please enter correct LRG name")
+        raise IOError(f"{filename} does not exist. "
+                      "Please enter correct LRG name")
 
     root = tree.getroot()
-
     try:
-        mapping_list = (root.find("updatable_annotation/annotation_set[@type='lrg']")
+        # list of all mapping annotations for lrgs
+        mapping_list = (root.find("updatable_annotation"
+                                  "/annotation_set[@type='lrg']")
                             .findall("mapping"))
     except AttributeError:
         raise AttributeError("No LRG annotation found, corrupted LRG file?\n"
                               f"Please check {filename}")
 
     builds = {}
-
     for item in mapping_list:
         build_dict = item.find("mapping_span").attrib
         assert build_dict['lrg_start'] < build_dict['lrg_end'], (
@@ -76,14 +124,13 @@ def mapping_diff(filename: str) -> dict:
         # save build differences to builds dict using build as key
         builds[item.attrib['coord_system']] = build_dict
 
-
     assert builds, "No mapping co-ordinates found"
-
     return builds
 
 if __name__ == '__main__':
     parser = ArgumentParser(
-        description='Show transcript information and build differences for given LRG')
+        description='Show transcript information and '
+                    'build differences for given LRG')
 
     group = parser.add_mutually_exclusive_group()
     parser.add_argument('input', help='LRG or HGNC name (e.g. LRG_214 or NF1)')
